@@ -1,8 +1,16 @@
 import React from 'react';
-import { Container } from './styles';
+import { Image } from 'react-native';
+import { Container, Title } from './styles';
+
+import logImg from '../../assets/logo.png';
 
 const SigIn: React.FC = () => {
-  return <Container />;
+  return (
+    <Container>
+      <Image source={logImg} />
+      <Title>Log on</Title>
+    </Container>
+  );
 };
 
 export default SigIn;
