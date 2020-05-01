@@ -6,11 +6,14 @@ import {
   View,
   ScrollView,
   TextInput,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+import * as Yup from 'yup';
+import getValidationErrors from '../../utils/getValidationErrors';
 
 import { Container, Title, BackToSignIn, BackToSignInButton } from './styles';
 
@@ -19,15 +22,45 @@ import Input from '../../components/Input';
 
 import logImg from '../../assets/logo.png';
 
-const SigUp: React.FC = () => {
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+}
+
+const SignUp: React.FC = () => {
   const navigation = useNavigation();
   const passwordInputRef = useRef<TextInput>(null);
   const emailInputRef = useRef<TextInput>(null);
 
   const formRef = useRef<FormHandles>(null);
 
-  const handleSignUp = useCallback((data: object) => {
-    console.log(data);
+  const handleSignUp = useCallback(async (data: SignUpFormData) => {
+    try {
+      formRef.current?.setErrors({});
+
+      const schema = Yup.object().shape({
+        name: Yup.string().required('Enter your name'),
+        email: Yup.string().required('Enter your valid e-mail'),
+        password: Yup.string().min(6, 'At least 6 digits'),
+      });
+
+      await schema.validate(data, {
+        abortEarly: false,
+      });
+
+      // history.push('/');
+    } catch (err) {
+      if (err instanceof Yup.ValidationError) {
+        const errors = getValidationErrors(err);
+        formRef.current?.setErrors(errors);
+      }
+
+      Alert.alert(
+        'Authentication error',
+        'Error trying to Sign Up, verify your data',
+      );
+    }
   }, []);
 
   return (
@@ -105,4 +138,4 @@ const SigUp: React.FC = () => {
   );
 };
 
-export default SigUp;
+export default SignUp;
