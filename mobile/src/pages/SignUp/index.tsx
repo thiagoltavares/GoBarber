@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
+import api from '../../services/api';
 import getValidationErrors from '../../utils/getValidationErrors';
 
 import { Container, Title, BackToSignIn, BackToSignInButton } from './styles';
@@ -49,11 +50,18 @@ const SignUp: React.FC = () => {
         abortEarly: false,
       });
 
+      await api.post('/users', data);
+
+      Alert.alert('Success', 'Account created, please log in.');
+
+      navigation.goBack();
+
       // history.push('/');
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = getValidationErrors(err);
         formRef.current?.setErrors(errors);
+        return;
       }
 
       Alert.alert(

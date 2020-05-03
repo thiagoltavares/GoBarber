@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 import { Form } from '@unform/mobile';
 import { FormHandles } from '@unform/core';
+import { useAuth } from '../../hooks/auth';
 import getValidationErrors from '../../utils/getValidationErrors';
 import {
   Container,
@@ -38,39 +39,44 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   const formRef = useRef<FormHandles>(null);
 
-  const handleSignIn = useCallback(async (data: SigInFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const { signIn } = useAuth();
 
-      const schema = Yup.object().shape({
-        email: Yup.string()
-          .required('Insert your email')
-          .email('Insert a valid email'),
-        password: Yup.string().required('Insert your password'),
-      });
+  const handleSignIn = useCallback(
+    async (data: SigInFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        const schema = Yup.object().shape({
+          email: Yup.string()
+            .required('Insert your email')
+            .email('Insert a valid email'),
+          password: Yup.string().required('Insert your password'),
+        });
 
-      /*       await SignIn({
-        email: data.email,
-        password: data.password,
-      }); */
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      // history.push('/dashboard');
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors);
+        await signIn({
+          email: data.email,
+          password: data.password,
+        });
+
+        // history.push('/dashboard');
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+        }
+
+        Alert.alert(
+          'Authentication error',
+          'Error trying to Sign In, verify your data',
+        );
       }
-
-      Alert.alert(
-        'Authentication error',
-        'Error trying to Sign In, verify your data',
-      );
-    }
-  }, []);
+    },
+    [signIn],
+  );
 
   return (
     <>
