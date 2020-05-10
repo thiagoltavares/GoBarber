@@ -14,11 +14,12 @@ class UsersRepository implements IUserRepository {
 
   public async findById(id: string): Promise<User | undefined> {
     const user = await this.ormRepository.findOne(id);
+
     return user;
   }
 
   public async findByEmail(email: string): Promise<User | undefined> {
-    const user = await this.ormRepository.findOne(email);
+    const user = await this.ormRepository.findOne({ email });
 
     return user;
   }
@@ -26,7 +27,7 @@ class UsersRepository implements IUserRepository {
   public async create(userData: ICreateUserDTO): Promise<User> {
     const user = this.ormRepository.create(userData);
 
-    this.ormRepository.save(user);
+    await this.ormRepository.save(user);
 
     return user;
   }
