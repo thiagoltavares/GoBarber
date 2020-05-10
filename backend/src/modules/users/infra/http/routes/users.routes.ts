@@ -21,11 +21,15 @@ usersRouter.post('/', async (request, response) => {
 
   const createUser = container.resolve(CreateUserService);
 
+  console.log(createUser);
   const user = await createUser.execute({ name, email, password });
+  /*
 
   delete user.password;
 
-  return response.json(user);
+return response.json(user); */
+
+  response.json({ ok: true });
 });
 
 usersRouter.patch(
