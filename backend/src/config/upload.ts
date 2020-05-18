@@ -4,8 +4,10 @@ import crypto from 'crypto';
 import multer from 'multer';
 
 const tempFolder = path.resolve(__dirname, '..', '..', 'temp');
+const uploadsFolder = path.resolve(tempFolder, 'uploads');
 export default {
-  directory: tempFolder,
+  tempFolder,
+  uploadsFolder,
 
   storage: multer.diskStorage({
     destination: tempFolder,

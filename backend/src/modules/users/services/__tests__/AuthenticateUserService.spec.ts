@@ -34,24 +34,14 @@ describe('AuthenticateUserService', () => {
     expect(response.user).toEqual(user);
   });
 
-  it('should be able to fail authenticate with wrong email', async () => {
+  it('should not be able to authenticate invalid email', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
     const fakeHashProvider = new FakeHashProvider();
 
-    const createUser = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
     const authenticateUser = new AuthenticateUserService(
       fakeUsersRepository,
       fakeHashProvider,
     );
-
-    await createUser.execute({
-      name: 'Thiago Maha',
-      email: 'thiago@maha.com',
-      password: '123456',
-    });
 
     expect(
       authenticateUser.execute({
@@ -61,7 +51,7 @@ describe('AuthenticateUserService', () => {
     ).rejects.toBeInstanceOf(AppError);
   });
 
-  it('should be able to fail authenticate with wrong password', async () => {
+  it('should not be able to authenticate with invalid password', async () => {
     const fakeUsersRepository = new FakeUsersRepository();
     const fakeHashProvider = new FakeHashProvider();
 
