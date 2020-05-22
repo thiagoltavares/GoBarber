@@ -3,7 +3,7 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '@shared/errors/AppError';
 import IMailProvider from '@shared/container/providers/EmailProvider/models/IMailProvider';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
-import IUserTokenRepository from '@modules/users/repositories/IUsersTokenRepository';
+import IUserTokensRepository from '@modules/users/repositories/IUserTokensRepository';
 
 interface IRequest {
   email: string;
@@ -19,7 +19,7 @@ class SendForgotPasswordEmailService {
     private mailProvider: IMailProvider,
 
     @inject('UserTokensProvider')
-    private userTokensProvider: IUserTokenRepository,
+    private userTokensProvider: IUserTokensRepository,
   ) {}
 
   public async execute({ email }: IRequest): Promise<void> {
