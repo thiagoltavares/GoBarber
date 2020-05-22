@@ -48,7 +48,7 @@ describe('SendForgotPasswordEmail', () => {
   });
 
   it('should be able to generate a forgot password token', async () => {
-    const generatedToken = jest.spyOn(fakeUserTokensRepository, 'generated');
+    const generateToken = jest.spyOn(fakeUserTokensRepository, 'generate');
 
     const user = await fakeUsersRepository.create({
       email: 'thiago@maha.com',
@@ -60,6 +60,6 @@ describe('SendForgotPasswordEmail', () => {
       email: 'thiago@maha.com',
     });
 
-    expect(generatedToken).toHaveBeenCalledWith(user.id);
+    expect(generateToken).toHaveBeenCalledWith(user.id);
   });
 });

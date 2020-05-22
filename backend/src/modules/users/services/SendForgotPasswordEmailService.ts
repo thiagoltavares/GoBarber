@@ -29,7 +29,7 @@ class SendForgotPasswordEmailService {
       throw new AppError("User doesn't exists");
     }
 
-    await this.userTokensProvider.generated(user.id);
+    await this.userTokensProvider.generate(user.id);
 
     this.mailProvider.sendMail(email, 'Recover mail request.');
   }
