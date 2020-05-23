@@ -6,12 +6,12 @@ import uploadConfig from '@config/upload';
 import ensureAthenticated from '@modules/users/infra/http/middlewares/ensureAthenticated';
 
 import UsersController from '@modules/users/infra/http/controllers/UsersController';
-import AvatarController from '@modules/users/infra/http/controllers/AvatarController';
+import UsersAvatarController from '@modules/users/infra/http/controllers/UsersAvatarController';
 
 const usersRouter = Router();
 const upload = multer(uploadConfig);
 const usersController = new UsersController();
-const avatarController = new AvatarController();
+const usersAvatarController = new UsersAvatarController();
 
 /* usersRouter.get('/', async (request, response) => {
   const users = await usersRepository.find();
@@ -25,7 +25,7 @@ usersRouter.patch(
   '/avatar',
   ensureAthenticated,
   upload.single('avatar'),
-  avatarController.update,
+  usersAvatarController.update,
 );
 
 export default usersRouter;

@@ -1,6 +1,6 @@
 import AppError from '@shared/errors/AppError';
 
-import FakeMailProvider from '@shared/container/providers/EmailProvider/fakes/FakeMailProvider';
+import FakeMailProvider from '@shared/container/providers/MailProvider/fakes/FakeMailProvider';
 import FakeUsersRepository from '../../repositories/fakes/FakeUserRepository';
 import FakeUserTokensRepository from '../../repositories/fakes/FakeUserTokensRepository';
 import SendForgotPasswordEmailService from '../SendForgotPasswordEmailService';

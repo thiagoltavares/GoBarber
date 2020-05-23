@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
 import AppError from '@shared/errors/AppError';
-import IMailProvider from '@shared/container/providers/EmailProvider/models/IMailProvider';
+import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 import IUserTokensRepository from '@modules/users/repositories/IUserTokensRepository';
 
@@ -18,8 +18,8 @@ class SendForgotPasswordEmailService {
     @inject('MailProvider')
     private mailProvider: IMailProvider,
 
-    @inject('UserTokensProvider')
-    private userTokensProvider: IUserTokensRepository,
+    @inject('UsersTokenRepository')
+    private userTokensRepository: IUserTokensRepository,
   ) {}
 
   public async execute({ email }: IRequest): Promise<void> {
@@ -29,9 +29,22 @@ class SendForgotPasswordEmailService {
       throw new AppError("User doesn't exists");
     }
 
-    await this.userTokensProvider.generate(user.id);
+    const { token } = await this.userTokensRepository.generate(user.id);
 
-    this.mailProvider.sendMail(email, 'Recover mail request.');
+    await this.mailProvider.sendMail({
+      to: {
+        name: user.name,
+        email: user.email,
+      },
+      subject: '[GoBarber]: Password Recovery',
+      templateData: {
+        template: '<h1>Olá, {{name}}, token: {{token}}</h1>',
+        variables: {
+          name: user.name,
+          token,
+        },
+      },
+    });
   }
 }
 
