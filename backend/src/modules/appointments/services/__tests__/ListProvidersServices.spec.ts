@@ -5,7 +5,7 @@ let fakeUsersRepository: FakeUsersRepository;
 
 let listProvidersServices: ListProvidersServices;
 
-describe('listProvidersServices', () => {
+describe('listProviders', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository();
     listProvidersServices = new ListProvidersServices(fakeUsersRepository);
