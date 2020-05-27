@@ -50,8 +50,6 @@ class ListProviderMonthAvalabilityService {
       };
     });
 
-    console.log(availability);
-
     return availability;
   }
 }
