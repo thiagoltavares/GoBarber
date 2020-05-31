@@ -7,6 +7,8 @@ import Appointment from '@modules/appointments/infra/typeorm/entities/Appointmen
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 
+import IUserRepository from '@modules/users/repositories/IUserRepository';
+
 interface IRequest {
   provider_id: string;
   user_id: string;
@@ -21,6 +23,9 @@ class CreateAppointmentService {
 
     @inject('NotificationsRepository')
     private notificationsRepository: INotificationsRepository,
+
+    @inject('UsersRepository')
+    private usersRepository: IUserRepository,
   ) {}
 
   public async execute({
@@ -29,6 +34,12 @@ class CreateAppointmentService {
     user_id,
   }: IRequest): Promise<Appointment> {
     const appointmentDate = startOfHour(date);
+
+    const checkProviderExists = await this.usersRepository.findById(
+      provider_id,
+    );
+
+    if (!checkProviderExists) throw new AppError('Provider not found');
 
     if (isBefore(appointmentDate, Date.now())) {
       throw new AppError('You can not create an appointment on a past date');
