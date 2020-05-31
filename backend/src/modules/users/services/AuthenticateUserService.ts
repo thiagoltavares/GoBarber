@@ -43,9 +43,11 @@ class AuthenticateUserService {
       throw new AppError('Verify your password or email.', 401);
     }
 
-    delete user.password;
-
     const { expiresIn, secret } = authConfig.jwt;
+
+    if (!secret) {
+      throw new AppError('Secret missing');
+    }
 
     const token = sign({}, secret, {
       subject: user.id,
