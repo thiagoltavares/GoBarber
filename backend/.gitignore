@@ -106,4 +106,5 @@ dist
 #images
 temp/*
 !temp/.gitkeep
+ormconfig.json
 
