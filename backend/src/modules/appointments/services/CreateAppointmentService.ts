@@ -6,13 +6,14 @@ import AppError from '@shared/errors/AppError';
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository';
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 
 import IUserRepository from '@modules/users/repositories/IUserRepository';
 
 interface IRequest {
+  date: Date;
   provider_id: string;
   user_id: string;
-  date: Date;
 }
 
 @injectable()
@@ -26,6 +27,9 @@ class CreateAppointmentService {
 
     @inject('UsersRepository')
     private usersRepository: IUserRepository,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({
@@ -34,12 +38,22 @@ class CreateAppointmentService {
     user_id,
   }: IRequest): Promise<Appointment> {
     const appointmentDate = startOfHour(date);
+    const cacheKey = `provider-appointments:${provider_id}:${format(
+      appointmentDate,
+      'yyyy-M-d',
+    )}`;
 
+    /**
+     * Validation created out of rocket
+     */
     const checkProviderExists = await this.usersRepository.findById(
       provider_id,
     );
 
     if (!checkProviderExists) throw new AppError('Provider not found');
+    /**
+     * End of out of rocket validation
+     */
 
     if (isBefore(appointmentDate, Date.now())) {
       throw new AppError('You can not create an appointment on a past date');
@@ -75,6 +89,10 @@ class CreateAppointmentService {
       recipient_id: provider_id,
       content: `New appointments in ${dateFormatted}`,
     });
+
+    console.log(cacheKey);
+
+    await this.cacheProvider.invalidate(cacheKey);
 
     return appointment;
   }
