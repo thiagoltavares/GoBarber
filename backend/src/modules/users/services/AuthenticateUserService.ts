@@ -1,11 +1,12 @@
 import { sign } from 'jsonwebtoken';
-import { inject, injectable } from 'tsyringe';
 import authConfig from '@config/auth';
-import AppError from '@shared/errors/AppError';
+import { inject, injectable } from 'tsyringe';
 
+import AppError from '@shared/errors/AppError';
 import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
-import User from '@modules/users/infra/typeorm/entities/User';
 import IUserRepository from '@modules/users/repositories/IUserRepository';
+
+import User from '@modules/users/infra/typeorm/entities/User';
 
 interface IRequest {
   email: string;

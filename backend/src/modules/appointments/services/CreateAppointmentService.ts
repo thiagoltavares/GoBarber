@@ -8,8 +8,6 @@ import IAppointmentsRepository from '@modules/appointments/repositories/IAppoint
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository';
 import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 
-import IUserRepository from '@modules/users/repositories/IUserRepository';
-
 interface IRequest {
   date: Date;
   provider_id: string;
@@ -25,9 +23,6 @@ class CreateAppointmentService {
     @inject('NotificationsRepository')
     private notificationsRepository: INotificationsRepository,
 
-    @inject('UsersRepository')
-    private usersRepository: IUserRepository,
-
     @inject('CacheProvider')
     private cacheProvider: ICacheProvider,
   ) {}
@@ -42,18 +37,6 @@ class CreateAppointmentService {
       appointmentDate,
       'yyyy-M-d',
     )}`;
-
-    /**
-     * Validation created out of rocket
-     */
-    const checkProviderExists = await this.usersRepository.findById(
-      provider_id,
-    );
-
-    if (!checkProviderExists) throw new AppError('Provider not found');
-    /**
-     * End of out of rocket validation
-     */
 
     if (isBefore(appointmentDate, Date.now())) {
       throw new AppError('You can not create an appointment on a past date');
@@ -89,8 +72,6 @@ class CreateAppointmentService {
       recipient_id: provider_id,
       content: `New appointments in ${dateFormatted}`,
     });
-
-    console.log(cacheKey);
 
     await this.cacheProvider.invalidate(cacheKey);
 
