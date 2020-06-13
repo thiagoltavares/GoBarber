@@ -5,10 +5,13 @@ import IFindAllInDayFromProviderDTO from '@modules/appointments/dtos/IFindAllInD
 
 export default interface IAppointmentsRepository {
   create(data: ICreateAppointmentsDTO): Promise<Appointment>;
-  findByDate(date: Date): Promise<Appointment | undefined>;
+
+  findByDate(date: Date, provider_id: string): Promise<Appointment | undefined>;
+
   findAllInMouthFromProvider(
     data: IFindAllInMounthFromProviderDTO,
   ): Promise<Appointment[]>;
+
   findAllInDayFromProvider(
     data: IFindAllInDayFromProviderDTO,
   ): Promise<Appointment[]>;
