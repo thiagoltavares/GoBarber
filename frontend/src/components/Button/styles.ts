@@ -1,5 +1,17 @@
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { FiLoader } from 'react-icons/fi';
+
 import { shade } from 'polished';
+
+const spin = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+`;
 
 export const Container = styled.button`
   background: #ff9000;
@@ -17,4 +29,8 @@ export const Container = styled.button`
   &:hover {
     background-color: ${shade(0.2, '#FF9000')};
   }
+`;
+
+export const Loader = styled(FiLoader)`
+  animation: ${spin} 2s infinite ease-in-out;
 `;
