@@ -39,6 +39,7 @@
     "react/prop-types": "off",
     "no-unused-expressions": "off",
     "consistent-return": "off",
+    "@typescript-eslint/camelcase": "off",
     "@typescript-eslint/explicit-function-return-type": [
       "error",
       {

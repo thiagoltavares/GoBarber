@@ -33,7 +33,7 @@ const SignIn: React.FC = () => {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          email: Yup.string().required('Enter your valid e-mail'),
+          email: Yup.string().required('Enter your valid e-mail').email(),
           password: Yup.string().required('Enter your password'),
         });
 
@@ -83,9 +83,9 @@ const SignIn: React.FC = () => {
               placeholder="password"
             />
 
-            <Button type="submit">Sig In</Button>
+            <Button type="submit">Sign In</Button>
 
-            <a href="forgot">Recover Password</a>
+            <Link to="/forgot-password">Recover Password</Link>
           </Form>
 
           <Link to="/signup">
