@@ -16,8 +16,11 @@ import { Container, Content, AvatarInput } from './styles';
 import api from '../../services/api';
 
 interface ProfileFormData {
+  name: string;
   email: string;
+  old_password: string;
   password: string;
+  password_confirmation: string;
 }
 
 const Profile: React.FC = () => {
@@ -28,18 +31,75 @@ const Profile: React.FC = () => {
 
   const handleSubmit = useCallback(
     async (data: ProfileFormData) => {
+      if (
+        user.name === data.name &&
+        user.email === data.email &&
+        !data.old_password &&
+        !data.password &&
+        !data.password_confirmation
+      ) {
+        history.push('/dashboard');
+        return;
+      }
+
       try {
         formRef.current?.setErrors({});
 
         const schema = Yup.object().shape({
-          email: Yup.string().required('Enter your valid e-mail').email(),
-          password: Yup.string().required('Enter your password'),
+          name: Yup.string().required('Nome obrigatório'),
+          email: Yup.string()
+            .required('Email Obrigatório')
+            .email('Digite um email válido'),
+          old_password: Yup.string().when('password', {
+            is: (val) => !!val.length,
+            then: Yup.string().required('Campo obrigatório'),
+            otherwise: Yup.string(),
+          }),
+          password: Yup.string().when('old_password', {
+            is: (val) => !!val.length,
+            then: Yup.string().required('Campo obrigatório'),
+            otherwise: Yup.string(),
+          }),
+          password_confirmation: Yup.string()
+            .when('old_password', {
+              is: (val) => !!val.length,
+              then: Yup.string().required('Campo obrigatório'),
+              otherwise: Yup.string(),
+            })
+            .oneOf([Yup.ref('password'), null], 'Confirmação incorreta.'),
         });
 
         await schema.validate(data, {
           abortEarly: false,
         });
-        const { email, password } = data;
+
+        const {
+          name,
+          email,
+          old_password,
+          password,
+          password_confirmation,
+        } = data;
+
+        const formData = {
+          name,
+          email,
+          ...(old_password && {
+            old_password,
+            password,
+            password_confirmation,
+          }),
+        };
+
+        const response = await api.put('/profile', formData);
+
+        updateUser(response.data);
+
+        addToast({
+          type: 'success',
+          title: 'Perfil Atualizado',
+          description: 'Suas atualizações foram atualizadas com sucesso',
+        });
 
         history.push('/dashboard');
       } catch (err) {
@@ -55,7 +115,7 @@ const Profile: React.FC = () => {
         });
       }
     },
-    [addToast, history],
+    [addToast, history, updateUser, user],
   );
 
   const handleAvatarChange = useCallback(
