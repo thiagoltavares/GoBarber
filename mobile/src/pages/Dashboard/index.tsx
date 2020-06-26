@@ -7,7 +7,7 @@ const Dashboard: React.FC = () => {
   const { signOut } = useAuth();
   return (
     <View style={{ flex: 1, justifyContent: 'center' }}>
-      <Button title="LogOut" onPress={signOut} />
+      <Button title="Sair" onPress={signOut} />
     </View>
   );
 };
