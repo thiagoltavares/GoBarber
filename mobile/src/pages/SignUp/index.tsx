@@ -36,40 +36,43 @@ const SignUp: React.FC = () => {
 
   const formRef = useRef<FormHandles>(null);
 
-  const handleSignUp = useCallback(async (data: SignUpFormData) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSignUp = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Enter your name'),
-        email: Yup.string().required('Enter your valid e-mail'),
-        password: Yup.string().min(6, 'At least 6 digits'),
-      });
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Enter your name'),
+          email: Yup.string().required('Enter your valid e-mail'),
+          password: Yup.string().min(6, 'At least 6 digits'),
+        });
 
-      await schema.validate(data, {
-        abortEarly: false,
-      });
+        await schema.validate(data, {
+          abortEarly: false,
+        });
 
-      await api.post('/users', data);
+        await api.post('/users', data);
 
-      Alert.alert('Success', 'Account created, please log in.');
+        Alert.alert('Success', 'Account created, please log in.');
 
-      navigation.goBack();
+        navigation.goBack();
 
-      // history.push('/');
-    } catch (err) {
-      if (err instanceof Yup.ValidationError) {
-        const errors = getValidationErrors(err);
-        formRef.current?.setErrors(errors);
-        return;
+        // history.push('/');
+      } catch (err) {
+        if (err instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(err);
+          formRef.current?.setErrors(errors);
+          return;
+        }
+
+        Alert.alert(
+          'Authentication error',
+          'Error trying to Sign Up, verify your data',
+        );
       }
-
-      Alert.alert(
-        'Authentication error',
-        'Error trying to Sign Up, verify your data',
-      );
-    }
-  }, []);
+    },
+    [navigation],
+  );
 
   return (
     <>
