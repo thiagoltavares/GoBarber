@@ -92,7 +92,7 @@ const SignIn: React.FC = () => {
           <Container>
             <Image source={logImg} />
             <View>
-              <Title>Log on</Title>
+              <Title>Entrar</Title>
             </View>
 
             <Form ref={formRef} onSubmit={handleSignIn}>
@@ -126,7 +126,7 @@ const SignIn: React.FC = () => {
                   formRef.current?.submitForm();
                 }}
               >
-                Sign In
+                Entrar
               </Button>
             </Form>
 
@@ -135,7 +135,7 @@ const SignIn: React.FC = () => {
                 console.log('deu');
               }}
             >
-              <ForgotPasswordButton>Forgot password?</ForgotPasswordButton>
+              <ForgotPasswordButton>Esqueceu a senha?</ForgotPasswordButton>
             </ForgotPassword>
           </Container>
         </ScrollView>
@@ -143,7 +143,7 @@ const SignIn: React.FC = () => {
 
       <CreateAccount onPress={() => navigation.navigate('SignUp')}>
         <Icon name="log-in" color="#FF9000" />
-        <CreateAccountButton>Create Account</CreateAccountButton>
+        <CreateAccountButton>Criar Conta</CreateAccountButton>
       </CreateAccount>
     </>
   );

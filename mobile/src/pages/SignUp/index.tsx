@@ -134,7 +134,7 @@ const SignUp: React.FC = () => {
                   formRef.current?.submitForm();
                 }}
               >
-                Sign Up
+                Criar conta
               </Button>
             </Form>
           </Container>
